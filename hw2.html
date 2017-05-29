@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- HW2 Assignment - September, 2016 - Louis Vu -->
+<body>
+<canvas id="canvas" width="500" height="370" style="background: url('madison.jpg')"></canvas>
+<pre> Move Sonic and hit Dr. Robotnik </pre>
+<br/>
+Move Sonic: <input id="slider5" type="range" min="-410" max="50"/>
+<br/>
+Move Tails: <input id="slider1" type="range" min="0" max="460" />
+<br/>
+Ball 1 speed: <input id="slider4" type="range" min="0" max="1" step=".01"/>
+<br/>
+Ball 2 speed: <input id="slider2" type="range" min="0" max="1" step=".01"/>
+<br/>
+Ball 3 speed: <input id="slider3" type="range" min="0" max="1" step=".01"/>
+<br/>
+
+</body>
+<script> "use strict"
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
+// Sprites
+var boss = document.createElement("img");
+boss.src = "boss2.png";
+var ball = document.createElement("img");
+ball.src = "boss2.png";
+var ball2 = document.createElement("img");
+ball2.src = "boss2.png";
+var ball3 = document.createElement("img");
+ball3.src = "boss2.png";
+var chain = document.createElement("img");
+chain.src = "chain.png";
+var imgTails2 = document.createElement("img");
+imgTails2.src = "tails3.png";
+var imgTails = document.createElement("img");
+imgTails.src = "tails5.png";
+var tailsStand = document.createElement("img");
+tailsStand.src = "tails.png";
+var tailsStand2 = document.createElement("img");
+tailsStand2.src = "tailsReverse.png";
+
+var sonic = document.createElement("img");
+sonic.src = "soniccd.gif";
+var sonicReverse = document.createElement("img");
+sonicReverse.src = "sonicReverse.gif";
+
+// Sliders
+var slider1 = document.getElementById('slider1');
+slider1.value = 0;
+var slider2 = document.getElementById('slider2');
+slider2.value = .05;
+var slider3 = document.getElementById('slider3');
+slider3.value = .05;
+var slider4 = document.getElementById('slider4');
+slider4.value = .05;
+var slider5 = document.getElementById('slider5');
+slider5.value = 50;
+
+//do function() as soon as img finish loading
+boss.addEventListener("load", function() {
+
+    var startH = 0;
+    var startW = 0;
+    var centerImX = 60/2;
+    var centerImY = 77/2;
+    var spriteH = 60;
+    var spriteW = 77;
+    // speed
+    var addH = 7;
+    var addW = 4;
+    var tempH = 0;
+    var tempW = 0;
+    //radius of pic
+    var radiusX = 30;
+    var radiusY = 30;
+
+    var reverseWTails = 52.9, reverseHTails = 65;
+    var tailsW = 52.9, tailsH = 64;
+
+    var degree = 0;
+    var degree2 = 0;
+    var degree3 = 0;
+    var imageFlip = true;
+
+    var sonicW = 48, sonicH = 48;
+    var round = 0;
+    var round2 = 0;
+    var roundMod = 0;
+    // Sonic walk
+    var walk = false;
+
+    // tails fly
+    var fly = false;
+
+    // tails stand rounds
+    var roundTailsStand = 0;
+
+    //loop function() every 120ms
+    ctx.scale(-1,1);
+    ctx.translate(-canvas.width,0);
+    setInterval(function(){
+        round++;
+        round2++;
+        roundTailsStand++;
+        degree = degree -(-slider2.value);
+        degree2 = degree2 -(-slider3.value);
+        degree3 = degree3 -(-slider4.value);
+        slider5.addEventListener("mousedown",function(){
+            walk = true;
+        });
+        slider5.addEventListener("mouseup",function(){
+            walk = false;
+        });
+        slider1.addEventListener("mousedown",function(){
+            fly = true;
+        });
+        slider1.addEventListener("mouseup",function(){
+            fly = false;
+        });
+        if(imageFlip){
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            /* Draw Balls */
+            // Ball 3
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0 , 0, 33, 33,
+                    // destination rectangle
+                    startW+30 + 40*Math.cos(degree2), startH+17 + 40*Math.sin(degree2), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0 , 0, 33, 33,
+                    // destination rectangle
+                    startW+30 + 60*Math.cos(degree2), startH+17 + 60*Math.sin(degree2), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0 , 0, 33, 33,
+                    // destination rectangle
+                    startW+30 + 80*Math.cos(degree2), startH+17 + 80*Math.sin(degree2), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0 , 0, 33, 33,
+                    // destination rectangle
+                    startW+30 + 100*Math.cos(degree2), startH+17 + 100*Math.sin(degree2), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0 , 0, 33, 33,
+                    // destination rectangle
+                    startW+30 + 120*Math.cos(degree2), startH+17 + 120*Math.sin(degree2), 33, 33);
+            ctx.drawImage(ball2,
+                    // source rectangle
+                    spriteW + 140, 4*spriteH +15, spriteW, spriteH,
+                    // destination rectangle
+                    startW + 150*Math.cos(degree2), startH + 150*Math.sin(degree2), spriteW, spriteH);
+            // Ball 2
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0 , 0, 33, 33,
+                    // destination rectangle
+                    startW+30 + 40*Math.cos(degree), startH+17 + 40*Math.sin(degree), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0 , 0, 33, 33,
+                    // destination rectangle
+                    startW+30 + 60*Math.cos(degree), startH+17 + 60*Math.sin(degree), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0 , 0, 33, 33,
+                    // destination rectangle
+                    startW+30 + 80*Math.cos(degree), startH+17 + 80*Math.sin(degree), 33, 33);
+            ctx.drawImage(ball,
+                    // source rectangle
+                    spriteW + 140, 4*spriteH +15, spriteW, spriteH,
+                    // destination rectangle
+                    startW + 100*Math.cos(degree), startH + 100*Math.sin(degree), spriteW, spriteH);
+            // Ball 1
+            ctx.drawImage(ball3,
+                    // source rectangle
+                    spriteW + 140, 4*spriteH +15, spriteW, spriteH,
+                    // destination rectangle
+                    startW + 50*Math.cos(degree3), startH + 50*Math.sin(degree3), spriteW, spriteH);
+            // draw boss
+            ctx.drawImage(boss,
+                    // source rectangle
+                    6*spriteW, spriteH, spriteW, spriteH,
+                    // destination rectangle
+                    startW,              startH, spriteW, spriteH);
+
+            tempH = startH;
+            tempW = startW;
+            startH = startH + addH;
+            startW = startW + addW;
+            centerImX = centerImX + addW;
+            centerImY = centerImY + addH;
+
+            if(fly) {
+                ctx.drawImage(imgTails2,
+                        // source rectangle
+                        roundMod * reverseWTails, 0, reverseWTails, reverseHTails,
+                        // destination rectangle
+                        canvas.width - reverseWTails - 5 - slider1.value, canvas.height - 1.2 * reverseHTails, reverseWTails, reverseHTails);
+                roundMod = (roundMod + 1) % 2;
+            }else {
+                //tails stand
+                if(roundTailsStand>=0 && roundTailsStand <3) {
+                    ctx.drawImage(tailsStand2,
+                            // source rectangle
+                            17 * (reverseWTails - 1), reverseHTails + 1, reverseWTails, reverseHTails + 1,
+                            // destination rectangle
+                            canvas.width - reverseWTails - slider1.value, canvas.height - reverseHTails, reverseWTails, reverseHTails);
+                }
+                if(roundTailsStand>=3 && roundTailsStand <6) {
+                    ctx.drawImage(tailsStand2,
+                            // source rectangle
+                            16 * (reverseWTails - 1) -1, reverseHTails + 1, reverseWTails, reverseHTails + 1,
+                            // destination rectangle
+                            canvas.width - reverseWTails - slider1.value, canvas.height - reverseHTails, reverseWTails, reverseHTails);
+                }
+                if(roundTailsStand>=6 && roundTailsStand <9) {
+                    ctx.drawImage(tailsStand2,
+                            // source rectangle
+                            15 * (reverseWTails - 1)-4.2, reverseHTails + 1, reverseWTails + 7, reverseHTails + 1,
+                            // destination rectangle
+                            canvas.width - reverseWTails - slider1.value, canvas.height - reverseHTails, reverseWTails + 7, reverseHTails);
+                }
+                if(roundTailsStand>=9 && roundTailsStand <12) {
+                    ctx.drawImage(tailsStand2,
+                            // source rectangle
+                            14 * (reverseWTails - 1) - 6.5, reverseHTails + 1, reverseWTails + 7, reverseHTails + 1,
+                            // destination rectangle
+                            canvas.width - reverseWTails - slider1.value -.1, canvas.height - reverseHTails, reverseWTails + 7, reverseHTails);
+                }
+                if(roundTailsStand>=12) {
+                    ctx.drawImage(tailsStand2,
+                            // source rectangle
+                            13 * (reverseWTails - 1) -8.5, reverseHTails + 1, reverseWTails + 7, reverseHTails + 1,
+                            // destination rectangle
+                            canvas.width - reverseWTails - slider1.value, canvas.height - reverseHTails, reverseWTails + 7, reverseHTails);
+                    roundTailsStand = 0;
+                }
+            }
+            if(!walk) {
+                round2 = 0;
+                if (round < 25) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            6 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+
+                // Sonic jump
+                if (round >= 25 && round < 27) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            0, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - 1.5 * sonicH, sonicW, sonicH);
+                    //DELETE THIS
+                    if (sonicW - (slider5.value)>(startW - 10) && ((canvas.height - 1.5 * sonicH)-50)<startH
+                            && (sonicW - (slider5.value)<startW +70)) {
+                        startH = startH - 20;
+                        centerImY = centerImY -20;
+                        round = 0;
+                        addH = -Math.abs(addH);
+                        radiusY = -Math.abs(radiusY);
+                    }
+                }
+                if (round >= 27 && round < 29) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - 2 * sonicH, sonicW, sonicH);
+                    //DELETE THIS
+                    if (sonicW - (slider5.value)>(startW - 10) && ((canvas.height - 2 * sonicH)-50)<startH
+                            && (sonicW - (slider5.value)<startW +70)) {
+                        startH = startH - 20;
+                        centerImY = centerImY -20;
+                        round = 41;
+                        addH = -Math.abs(addH);
+                        radiusY = -Math.abs(radiusY);
+                    }
+                }
+                if (round >= 29 && round < 31) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            2 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - 2.5 * sonicH, sonicW, sonicH);
+                    //DELETE THIS
+                    if (sonicW - (slider5.value)>(startW - 10) && ((canvas.height - 2.5 * sonicH)-50)<startH
+                            && (sonicW - (slider5.value)<startW +70)) {
+                        startH = startH - 20;
+                        centerImY = centerImY -20;
+                        round = 39;
+                        addH = -Math.abs(addH);
+                        radiusY = -Math.abs(radiusY);
+                    }
+                }
+                if (round >= 31 && round < 33) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            3 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - 3 * sonicH, sonicW, sonicH);
+                    //DELETE THIS
+                    if (sonicW - (slider5.value)>(startW - 10) && ((canvas.height - 3 * sonicH)-50)<startH
+                            && (sonicW - (slider5.value)<startW +70)) {
+                        startH = startH - 20;
+                        centerImY = centerImY -20;
+                        round = 37;
+                        addH = -Math.abs(addH);
+                        radiusY = -Math.abs(radiusY);
+                    }
+                }
+                if (round >= 33 && round < 35) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            0, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - 3.5 * sonicH, sonicW, sonicH);
+                    //DELETE THIS
+                    if (sonicW - (slider5.value)>(startW - 10) && ((canvas.height - 3.5 * sonicH)-50)<startH
+                            && (sonicW - (slider5.value)<startW +70)) {
+                        startH = startH - 20;
+                        centerImY = centerImY -20;
+                        round = 35;
+                        addH = -Math.abs(addH);
+                        radiusY = -Math.abs(radiusY);
+                    }
+                }
+                if (round >= 35 && round < 37) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - 3 * sonicH, sonicW, sonicH);
+                }
+                if (round >= 37 && round < 39) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            2*sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - 2.5 * sonicH, sonicW, sonicH);
+                }
+                if (round >= 39 && round < 41) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            3*sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - 2.0 * sonicH, sonicW, sonicH);
+                }
+                if (round >= 41 && round < 43) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            0, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - 1.5 * sonicH, sonicW, sonicH);
+                }
+                if (round >= 43) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            6 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                    round = 0;
+                }
+            }else{
+                round = 0;
+                if (round2 >= 0 && round2 < 2) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            0 , 0, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+                if (round2 >= 2 && round2 < 4) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+                if (round2 >= 4 && round2 < 6) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            2 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+                if (round2 >= 6 && round2 < 8) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            3 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+                if (round2 >= 8 && round2 < 10) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            4 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+                if (round2 >= 10) {
+                    ctx.drawImage(sonic,
+                            // source rectangle
+                            5 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            sonicW - (slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                    round2 = 0;
+                }
+            }
+            if (centerImY + radiusY > canvas.height ||
+                    centerImY + radiusY  < 0) {
+                addH = -addH;
+                radiusY = -radiusY;
+            }
+            if (centerImX + 3*radiusX > canvas.width ||
+                    centerImX + 3*radiusX  < 0) {
+                ctx.scale(-1,1);
+                ctx.translate(-canvas.width,0);
+                startW = 0;
+                centerImX = 0;
+                imageFlip = false;
+
+            }
+
+        }else {
+            var s1 = slider1.value;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            /* Draw Balls */
+            // Ball 3
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0, 0, 33, 33,
+                    // destination rectangle
+                    startW + 30 + 40 * Math.sin(degree2 + 180), startH + 17 + 40 * Math.cos(degree2 + 180), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0, 0, 33, 33,
+                    // destination rectangle
+                    startW + 30 + 60 * Math.sin(degree2 + 180), startH + 17 + 60 * Math.cos(degree2 + 180), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0, 0, 33, 33,
+                    // destination rectangle
+                    startW + 30 + 80 * Math.sin(degree2 + 180), startH + 17 + 80 * Math.cos(degree2 + 180), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0, 0, 33, 33,
+                    // destination rectangle
+                    startW + 30 + 100 * Math.sin(degree2 + 180), startH + 17 + 100 * Math.cos(degree2 + 180), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0, 0, 33, 33,
+                    // destination rectangle
+                    startW + 30 + 120 * Math.sin(degree2 + 180), startH + 17 + 120 * Math.cos(degree2 + 180), 33, 33);
+            ctx.drawImage(ball2,
+                    // source rectangle
+                    spriteW + 140, 4 * spriteH + 15, spriteW, spriteH,
+                    // destination rectangle
+                    startW + 150 * Math.sin(degree2 + 180), startH + 150 * Math.cos(degree2 + 180), spriteW, spriteH);
+            // Ball 2
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0, 0, 33, 33,
+                    // destination rectangle
+                    startW + 30 + 40 * Math.sin(degree + 180), startH + 17 + 40 * Math.cos(degree + 180), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0, 0, 33, 33,
+                    // destination rectangle
+                    startW + 30 + 60 * Math.sin(degree + 180), startH + 17 + 60 * Math.cos(degree + 180), 33, 33);
+            ctx.drawImage(chain,
+                    // source rectangle
+                    0, 0, 33, 33,
+                    // destination rectangle
+                    startW + 30 + 80 * Math.sin(degree + 180), startH + 17 + 80 * Math.cos(degree + 180), 33, 33);
+            ctx.drawImage(ball,
+                    // source rectangle
+                    spriteW + 140, 4 * spriteH + 15, spriteW, spriteH,
+                    // destination rectangle
+                    startW + 100 * Math.sin(degree + 180), startH + 100 * Math.cos(degree + 180), spriteW, spriteH);
+            // Ball 1
+            ctx.drawImage(ball3,
+                    // source rectangle
+                    spriteW + 140, 4 * spriteH + 15, spriteW, spriteH,
+                    // destination rectangle
+                    startW + 50 * Math.sin(degree3 +180), startH + 50 * Math.cos(degree3 + 180), spriteW, spriteH);
+            // Boss
+            ctx.drawImage(boss,
+                    // source rectangle
+                    6 * spriteW, spriteH, spriteW, spriteH,
+                    // destination rectangle
+                    startW, startH, spriteW, spriteH);
+
+
+            tempH = startH;
+            tempW = startW;
+            startH = startH + addH;
+            startW = startW + addW;
+            centerImX = centerImX + addW;
+            centerImY = centerImY + addH;
+
+            //ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if(fly) {
+
+                ctx.drawImage(imgTails,
+                        // source rectangle
+                        roundMod * tailsW, 0, tailsW, tailsH,
+                        // destination rectangle
+                        -7 - (-s1), canvas.height -10.5-reverseHTails, reverseWTails, reverseHTails);
+                roundMod = (roundMod + 1) % 2;
+            }else {
+                //tails stand
+                if(roundTailsStand>=0 && roundTailsStand <3) {
+                    ctx.drawImage(tailsStand,
+                            // source rectangle
+                            7, reverseHTails + 1, reverseWTails +7, reverseHTails + 1,
+                            // destination rectangle
+                            -(-slider1.value) - 6.5, canvas.height - reverseHTails, reverseWTails + 7, reverseHTails);
+                }
+                if(roundTailsStand>=3 && roundTailsStand <6) {
+                    ctx.drawImage(tailsStand,
+                            // source rectangle
+                            (reverseWTails - 1) +7, reverseHTails + 1, reverseWTails + 7, reverseHTails + 1,
+                            // destination rectangle
+                            -(-slider1.value) - 7.5, canvas.height - reverseHTails, reverseWTails + 7, reverseHTails);
+                }
+                if(roundTailsStand>=6 && roundTailsStand <9) {
+                    ctx.drawImage(tailsStand,
+                            // source rectangle
+                            2 * (reverseWTails - 1) +7, reverseHTails + 1, reverseWTails + 7, reverseHTails + 1,
+                            // destination rectangle
+                            -(-slider1.value) - 10.5, canvas.height - reverseHTails, reverseWTails + 7, reverseHTails);
+                }
+                if(roundTailsStand>=9 && roundTailsStand <12) {
+                    ctx.drawImage(tailsStand,
+                            // source rectangle
+                            3 * (reverseWTails - 1)+7, reverseHTails + 1, reverseWTails + 7, reverseHTails + 1,
+                            // destination rectangle
+                            -(-slider1.value) - 12.7, canvas.height - reverseHTails, reverseWTails + 7, reverseHTails);
+                }
+                if(roundTailsStand>=12) {
+                    ctx.drawImage(tailsStand,
+                            // source rectangle
+                            4 * (reverseWTails - 1) +8, reverseHTails + 1, reverseWTails + 8, reverseHTails + 1,
+                            // destination rectangle
+                            -(-slider1.value) - 14, canvas.height - reverseHTails, reverseWTails + 8, reverseHTails);
+                    roundTailsStand = 0;
+                }
+            }
+            if(!walk) {
+                round2 = 0;
+                if (round < 25) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            4 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+
+                // Sonic jump
+                if (round >= 25 && round < 27) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            10 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - 1.5 * sonicH, sonicW, sonicH);
+                    //DELETE THIS
+                    if (canvas.width - 2 * sonicW - (-slider5.value)>(startW - 10) && ((canvas.height - 1.5 * sonicH)-50)<startH
+                            && (canvas.width - 2 * sonicW - (-slider5.value))<(startW +70)) {
+                        startH = startH - 20;
+                        centerImY = centerImY -20;
+                        round = 0;
+                        addH = -Math.abs(addH);
+                        radiusY = -Math.abs(radiusY);
+                    }
+                }
+                if (round >= 27 && round < 29) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            9 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - 2 * sonicH, sonicW, sonicH);
+                    // DELETE THIS
+                    if ((canvas.width - 2 * sonicW - (-slider5.value))>(startW - 10) && ((canvas.height - 2 * sonicH)-50)<startH
+                            && (canvas.width - 2 * sonicW - (-slider5.value))<(startW +70)) {
+                        startH = startH - 20;
+                        centerImY = centerImY -20;
+                        round = 41;
+                        addH = -Math.abs(addH);
+                        radiusY = -Math.abs(radiusY);
+                    }
+                }
+                if (round >= 29 && round < 31) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            8 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - 2.5 * sonicH, sonicW, sonicH);
+                    //DELETE THIS
+                    if (canvas.width - 2 * sonicW - (-slider5.value)>(startW - 10) && ((canvas.height - 3 * sonicH)-50)<startH
+                            && (canvas.width - 2 * sonicW - (-slider5.value)<startW +70)) {
+                        startH = startH - 20;
+                        centerImY = centerImY -20;
+                        round = 37;
+                        addH = -Math.abs(addH);
+                        radiusY = -Math.abs(radiusY);
+                    }
+                }
+                if (round >= 31 && round < 33) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            7 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - 3 * sonicH, sonicW, sonicH);
+                    //DELETE THIS
+                    if (canvas.width - 2 * sonicW - (-slider5.value)>(startW - 10) && ((canvas.height - 3.5 * sonicH)-50)<startH
+                            && (canvas.width - 2 * sonicW - (-slider5.value)<startW +70)) {
+                        startH = startH - 20;
+                        centerImY = centerImY -20;
+                        round = 35;
+                        addH = -Math.abs(addH);
+                        radiusY = -Math.abs(radiusY);
+                    }
+                }
+                if (round >= 33 && round < 35) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            10 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - 3.5 * sonicH, sonicW, sonicH);
+                    //DELETE THIS
+                    if (canvas.width - 2 * sonicW - (-slider5.value)>(startW - 10) && ((canvas.height - 3.5 * sonicH)-50)<startH
+                            && (canvas.width - 2 * sonicW - (-slider5.value)<startW +70)) {
+                        startH = startH - 20;
+                        centerImY = centerImY -20;
+                        round = 35;
+                        addH = -Math.abs(addH);
+                        radiusY = -Math.abs(radiusY);
+                    }
+                }
+                if (round >= 35 && round < 37) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            9 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - 3 * sonicH, sonicW, sonicH);
+                }
+                if (round >= 37 && round < 39) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            8 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - 2.5 * sonicH, sonicW, sonicH);
+                }
+                if (round >= 39 && round < 41) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            7 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - 2 * sonicH, sonicW, sonicH);
+                }
+                if (round >= 41 && round < 43) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            10 * sonicW, 3 * sonicH, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - 1.5 * sonicH, sonicW, sonicH);
+                }
+                if (round >= 43) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            4 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                    round = 0;
+                }
+            }else{
+                round = 0;
+                if (round2 >= 0 && round2 < 2) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            10 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+                if (round2 >= 2 && round2 < 4) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            9 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+                if (round2 >= 4 && round2 < 6) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            8 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+                if (round2 >= 6 && round2 < 8) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            7 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+                if (round2 >= 8 && round2 < 10) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            6 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                }
+                if (round2 >= 10) {
+                    ctx.drawImage(sonicReverse,
+                            // source rectangle
+                            5 * sonicW, 0, sonicW, sonicH,
+                            // destination rectangle
+                            canvas.width - 2 * sonicW - (-slider5.value), canvas.height - sonicH, sonicW, sonicH);
+                    round2 = 0;
+                }
+
+            }
+            if (centerImY + radiusY > canvas.height ||
+                    centerImY + radiusY  < 0) {
+                addH = -addH;
+                radiusY = -radiusY;
+            }
+            if (centerImX + 3*radiusX > canvas.width ||
+                    centerImX + 3*radiusX  < 0) {
+                //ctx.save();
+                ctx.scale(-1,1);
+                ctx.translate(-canvas.width,0);
+                //ctx.restore();
+                startW = 0;
+                centerImX = 0;
+                imageFlip = true;
+
+
+            }
+        }
+    },30);//30
+});
+</script>
+<head>
+    <meta name="description" content="E4 - Slider Animation">
+    <meta charset="utf-8">
+    <title>HW2 - Sonic Game</title>
+</head>
+</html>
